@@ -4,52 +4,114 @@
 
 import sys
 import os
-from datetime import datetime
+import time
 from src.file_utils import read_file, write_result
 from src.algorithm import calculate_similarity
 
 def main():
-    # 检查命令行参数
-    if len(sys.argv) != 4:
-        print("用法: python main.py [原文文件] [抄袭版文件] [输出文件]")
-        print("例如: python main.py orig.txt copy.txt result.txt")
-        sys.exit(1)
+    """
+    主函数 - 论文查重系统入口
+    按照作业要求：输入输出采用文件输入输出，输出浮点数精确到小数点后两位
+    """
+    # 记录开始时间，确保5秒内完成
+    start_time = time.time()
     
-    original_file = sys.argv[1]
-    plagiarized_file = sys.argv[2] 
-    output_file = sys.argv[3]
-    
-    # 检查文件是否存在
-    if not os.path.exists(original_file):
-        print(f"错误: 原文文件不存在 - {original_file}")
-        sys.exit(1)
+    try:
+        # 检查命令行参数
+        if len(sys.argv) != 4:
+            print("错误: 参数数量不正确")
+            print("用法: python main.py [原文文件绝对路径] [抄袭版文件绝对路径] [输出文件绝对路径]")
+            sys.exit(1)
         
-    if not os.path.exists(plagiarized_file):
-        print(f"错误: 抄袭版文件不存在 - {plagiarized_file}")
+        original_file = sys.argv[1]
+        plagiarized_file = sys.argv[2] 
+        output_file = sys.argv[3]
+        
+        # 验证文件路径
+        if not original_file.strip() or not plagiarized_file.strip() or not output_file.strip():
+            print("错误: 文件路径不能为空")
+            sys.exit(1)
+        
+        # 验证是否为绝对路径
+        if not os.path.isabs(original_file):
+            print(f"错误: 原文文件路径必须是绝对路径: {original_file}")
+            sys.exit(1)
+        if not os.path.isabs(plagiarized_file):
+            print(f"错误: 抄袭版文件路径必须是绝对路径: {plagiarized_file}")
+            sys.exit(1)
+        if not os.path.isabs(output_file):
+            print(f"错误: 输出文件路径必须是绝对路径: {output_file}")
+            sys.exit(1)
+        
+        # 读取文件内容
+        try:
+            original_text = read_file(original_file)
+            plagiarized_text = read_file(plagiarized_file)
+        except FileNotFoundError as e:
+            print(f"错误: 文件不存在 - {e}")
+            sys.exit(1)
+        except PermissionError as e:
+            print(f"错误: 文件权限不足 - {e}")
+            sys.exit(1)
+        except IsADirectoryError as e:
+            print(f"错误: 路径是目录而非文件 - {e}")
+            sys.exit(1)
+        except UnicodeDecodeError as e:
+            print(f"错误: 文件编码无法识别 - {e}")
+            sys.exit(1)
+        except ValueError as e:
+            print(f"错误: 文件内容无效 - {e}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"错误: 文件读取失败 - {e}")
+            sys.exit(1)
+        
+        if not original_text or not plagiarized_text:
+            print("错误: 文件内容为空或读取失败")
+            sys.exit(1)
+        
+        # 计算相似度
+        try:
+            result = calculate_similarity(original_text, plagiarized_text)
+        except TypeError as e:
+            print(f"错误: 类型错误 - {e}")
+            sys.exit(1)
+        except ValueError as e:
+            print(f"错误: 计算错误 - {e}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"错误: 相似度计算失败 - {e}")
+            sys.exit(1)
+        
+        # 写入结果（只输出相似度数值，精确到小数点后两位）
+        try:
+            if write_result(output_file, original_file, plagiarized_file, result):
+                # 检查是否超时（5秒限制）
+                elapsed_time = time.time() - start_time
+                if elapsed_time > 5.0:
+                    print(f"错误: 程序运行超时 ({elapsed_time:.2f}秒)，超过5秒限制")
+                    sys.exit(1)
+            else:
+                print("错误: 结果写入失败")
+                sys.exit(1)
+        except PermissionError as e:
+            print(f"错误: 输出权限不足 - {e}")
+            sys.exit(1)
+        except OSError as e:
+            print(f"错误: 系统错误 - {e}")
+            sys.exit(1)
+        except ValueError as e:
+            print(f"错误: 参数错误 - {e}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"错误: 结果保存失败 - {e}")
+            sys.exit(1)
+            
+    except KeyboardInterrupt:
+        print("错误: 程序被用户中断")
         sys.exit(1)
-    
-    print(f"原文文件: {original_file}")
-    print(f"抄袭版文件: {plagiarized_file}")
-    print(f"输出文件: {output_file}")
-    
-    # 读取文件内容
-    print("读取文件...")
-    original_text = read_file(original_file)
-    plagiarized_text = read_file(plagiarized_file)
-    
-    if not original_text or not plagiarized_text:
-        print("错误: 文件读取失败")
-        sys.exit(1)
-    
-    # 计算相似度
-    print("计算相似度...")
-    result = calculate_similarity(original_text, plagiarized_text)
-    
-    # 写入结果
-    if write_result(output_file, original_file, plagiarized_file, result):
-        print(f"查重完成，相似度: {result:.2f}")
-    else:
-        print("错误: 结果写入失败")
+    except Exception as e:
+        print(f"错误: 程序运行错误 - {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
