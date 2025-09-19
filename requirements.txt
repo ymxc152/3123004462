@@ -1,0 +1,4 @@
+# 论文查重系统依赖
+numpy
+scikit-learn
+jieba
