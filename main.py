@@ -4,6 +4,7 @@
 
 import sys
 import os
+from datetime import datetime
 from src.file_utils import read_file, write_result
 from src.algorithm import calculate_similarity
 
@@ -45,7 +46,7 @@ def main():
     result = calculate_similarity(original_text, plagiarized_text)
     
     # 写入结果
-    if write_result(output_file, result):
+    if write_result(output_file, original_file, plagiarized_file, result):
         print(f"查重完成，相似度: {result:.2f}")
     else:
         print("错误: 结果写入失败")
