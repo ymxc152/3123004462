@@ -10,6 +10,34 @@
 -  **高效算法**：优化的文本预处理和相似度计算
 -  **模块化设计**：清晰的代码结构，便于维护和扩展
 
+## 快速开始
+
+1. **克隆项目**
+   ```bash
+   git clone <repository-url>
+   cd 3123004462
+   ```
+
+2. **安装依赖**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **运行测试**
+   ```bash
+   python run_all_tests.py
+   ```
+
+4. **使用命令行**
+   ```bash
+   python main.py data/orig.txt data/orig_0.8_add.txt output/result.txt
+   ```
+
+5. **启动Web界面**
+   ```bash
+   python web/app.py
+   ```
+
 ## 使用方法
 
 ### 命令行使用
@@ -36,7 +64,33 @@ python main.py orig.txt copy.txt result.txt
 
 **输出示例：**
 ```
-0.85
+原文文件: orig.txt
+抄袭版文件: copy.txt
+相似度: 0.85
+```
+
+### Web界面使用
+```bash
+# 启动Web服务器
+python web/app.py
+```
+然后在浏览器中访问 `http://localhost:5000` 进行文件上传和查重。
+
+### 测试
+
+#### 运行所有测试
+```bash
+python run_all_tests.py
+```
+
+#### 运行单元测试
+```bash
+python tests/test_algorithm.py
+```
+
+#### 运行批量测试
+```bash
+python tests/test_batch.py
 ```
 
 ## 安装依赖
@@ -49,28 +103,36 @@ pip install -r requirements.txt
 - `numpy`：数值计算支持
 - `scikit-learn`：机器学习算法库
 - `jieba`：中文分词工具
+- `Flask`：Web应用框架
 
 ## 项目结构
 
 ```
 3123004462/
 ├── main.py                    # 主程序入口
+├── run_all_tests.py          # 综合测试运行器
 ├── src/                       # 源代码目录
-│   ├── __init__.py           # 包初始化文件
 │   ├── algorithm.py          # 查重算法主模块
 │   ├── text_processor.py     # 文本预处理模块
 │   ├── similarity_calculator.py  # 相似度计算模块
 │   ├── result_formatter.py   # 结果格式化模块
-│   └── file_utils.py         # 文件读写工具模块
+│   ├── file_utils.py         # 文件读写工具模块
+│   └── report_generator.py   # 统一报告生成器
 ├── tests/                     # 测试目录
-│   ├── __init__.py           # 测试包初始化
-│   └── test_algorithm.py     # 算法测试用例
+│   ├── test_algorithm.py     # 单元测试
+│   └── test_batch.py         # 批量测试
 ├── web/                       # Web界面目录
 │   └── app.py                # Flask Web应用
 ├── data/                      # 测试数据目录
+│   ├── orig.txt              # 原始测试文件
+│   ├── orig_0.8_add.txt      # 添加内容测试文件
+│   ├── orig_0.8_del.txt      # 删除内容测试文件
+│   ├── orig_0.8_dis_1.txt    # 轻微修改测试文件
+│   ├── orig_0.8_dis_10.txt   # 中等修改测试文件
+│   ├── orig_0.8_dis_15.txt   # 较大修改测试文件
 │   └── README.md             # 数据目录说明
-├── output/                    # 输出结果目录
-│   └── README.md             # 输出目录说明
+├── output/                    # 输出结果目录（被.gitignore忽略）
+├── test_reports/              # 测试报告目录（被.gitignore忽略）
 ├── requirements.txt           # 项目依赖包列表
 ├── README.md                  # 项目说明文档
 └── .gitignore                # Git忽略文件配置
@@ -113,7 +175,28 @@ pip install -r requirements.txt
   - 编码格式自动检测
   - 文件操作异常处理
 
-### 4. 界面模块
+- **`src/report_generator.py`** - 统一报告生成器
+  - HTML报告模板生成
+  - 支持多种报告类型
+  - 统一的样式和格式
+
+### 4. 测试模块
+- **`run_all_tests.py`** - 综合测试运行器
+  - 单元测试执行
+  - 批量测试执行
+  - 综合报告生成
+
+- **`tests/test_algorithm.py`** - 单元测试
+  - 算法功能测试
+  - 边界条件测试
+  - 异常情况测试
+
+- **`tests/test_batch.py`** - 批量测试
+  - 老师提供的测试数据
+  - 批量相似度计算
+  - 批量测试报告
+
+### 5. 界面模块
 - **`web/app.py`** - Web界面
   - Flask Web应用框架
   - 文件上传功能
@@ -137,12 +220,15 @@ pip install -r requirements.txt
 - [x] 命令行参数解析
 - [x] 文件处理模块
 - [x] 模块化设计
-- [ ] 查重算法实现
-- [ ] 中文分词支持
-- [ ] 单元测试编写
-- [ ] Web界面开发
-- [ ] 前后端分离架构
-- [ ] 项目文档完善
+- [x] 查重算法实现
+- [x] 中文分词支持
+- [x] 单元测试编写
+- [x] 批量测试实现
+- [x] 综合测试系统
+- [x] 报告生成系统
+- [x] Web界面开发
+- [x] 前后端分离架构
+- [x] 项目文档完善
 
 **详细进度跟踪：** [PROGRESS.md](PROGRESS.md)
 
@@ -152,6 +238,8 @@ pip install -r requirements.txt
 - **算法库**：scikit-learn, numpy
 - **中文处理**：jieba
 - **Web框架**：Flask
+- **测试框架**：unittest
+- **报告生成**：HTML, JSON
 - **开发工具**：Git, VS Code
 
 ## 注意事项

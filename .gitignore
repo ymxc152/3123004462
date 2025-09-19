@@ -53,3 +53,25 @@ htmlcov/
 
 # Project specific
 PROGRESS.md
+
+# Output files
+output/
+test_reports/
+
+# Performance analysis files
+*.prof
+*.profile
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# IDE specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
