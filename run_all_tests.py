@@ -23,16 +23,26 @@ def run_unit_tests():
     
     try:
         # 直接导入并运行单元测试
-        from tests.test_algorithm import TestPlagiarismDetection, TestTextProcessor, TestSimilarityCalculator
+        from tests.test_algorithm import (
+            TestPlagiarismDetection, TestTextProcessor, TestSimilarityCalculator,
+            TestFileUtils, TestReportGenerator, TestResultFormatter,
+            TestAlgorithmAdvanced, TestTextProcessorAdvanced, TestSimilarityCalculatorAdvanced
+        )
         import unittest
         
         # 创建测试套件
         suite = unittest.TestSuite()
         
-        # 添加测试类
+        # 添加所有测试类
         suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestPlagiarismDetection))
         suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestTextProcessor))
         suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestSimilarityCalculator))
+        suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestFileUtils))
+        suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestReportGenerator))
+        suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestResultFormatter))
+        suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestAlgorithmAdvanced))
+        suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestTextProcessorAdvanced))
+        suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestSimilarityCalculatorAdvanced))
         
         # 运行测试
         runner = unittest.TextTestRunner(verbosity=2, stream=sys.stdout)
