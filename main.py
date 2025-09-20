@@ -5,8 +5,8 @@
 import sys
 import os
 import time
-from src.file_utils import read_file, write_result
-from src.algorithm import calculate_similarity
+
+# 性能优化：简化导入，避免过度优化
 
 def main():
     """
@@ -45,6 +45,8 @@ def main():
         
         # 读取文件内容
         try:
+            from src.file_utils import read_file
+            
             original_text = read_file(original_file)
             plagiarized_text = read_file(plagiarized_file)
         except FileNotFoundError as e:
@@ -72,7 +74,10 @@ def main():
         
         # 计算相似度
         try:
+            from src.algorithm import calculate_similarity
+            
             result = calculate_similarity(original_text, plagiarized_text)
+                
         except TypeError as e:
             print(f"错误: 类型错误 - {e}")
             sys.exit(1)
@@ -85,6 +90,8 @@ def main():
         
         # 写入结果（只输出相似度数值，精确到小数点后两位）
         try:
+            from src.file_utils import write_result
+            
             if write_result(output_file, original_file, plagiarized_file, result):
                 # 检查是否超时（5秒限制）
                 elapsed_time = time.time() - start_time
